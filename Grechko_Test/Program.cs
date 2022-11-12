@@ -12,7 +12,7 @@ internal static class Program
     static Program()
     {
         _nodeOf = Nodes.NewFactory();
-        _document = HtmlHelper.CreateHtml("SysCon Test Task");
+        _document = HtmlHelper.CreateHtml("KonSys Test Task");
     }
 
     static DirectoryInfo GetInputDirectory()
