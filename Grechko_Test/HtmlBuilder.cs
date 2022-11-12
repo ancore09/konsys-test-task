@@ -49,15 +49,15 @@ public class HtmlBuilder: IHtmlBuilder
             list = list.Add(HtmlHelper.GetFolderListItem(entry.Name, entry.Size));
             var subUl = HtmlHelper.CreateUnorderedList().AddClass("pl-4");
             
-            foreach (var s in adjList[entry.FullPath])
+            foreach (var subEntry in adjList[entry.FullPath])
             {
-                if (entries[s].Type == EntryType.Folder)
+                if (entries[subEntry].Type == EntryType.Folder)
                 {
-                    Dfs(entries[s], ref subUl);
+                    Dfs(entries[subEntry], ref subUl);
                 }
                 else
                 {
-                    subUl = subUl.Add(HtmlHelper.GetFileListElement(entries[s].Name, entries[s].Size, entries[s].MimeType));
+                    subUl = subUl.Add(HtmlHelper.GetFileListElement(entries[subEntry].Name, entries[subEntry].Size, entries[subEntry].MimeType));
                 }
             }
 
@@ -71,8 +71,8 @@ public class HtmlBuilder: IHtmlBuilder
 
     public void Write(FileInfo fileInfo)
     {
-        using var sw = new StreamWriter(fileInfo.FullName);
-        sw.Write(_document.ToString());
+        using var writer = new StreamWriter(fileInfo.FullName);
+        writer.Write(_document.ToString());
     }
     
 }

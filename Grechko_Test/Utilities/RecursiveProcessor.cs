@@ -10,27 +10,31 @@ public static class RecursiveProcessor
         dictionary.TryAdd(dirInfo.FullName,
             new Entry()
             {
-                FullPath = dirInfo.FullName, Name = dirInfo.Name, Size = 0, Type = EntryType.Folder
+                FullPath = dirInfo.FullName, 
+                Name = dirInfo.Name, 
+                Size = 0, 
+                Type = EntryType.Folder
             });
         tree.TryAdd(dirInfo.FullName, new List<string>());
         
-        string[] fileEntries = Directory.GetFiles(targetDirectory);
         long size = 0;
-        foreach (string fileName in fileEntries)
+        foreach (string fileName in Directory.GetFiles(targetDirectory))
         {
             FileInfo fileInfo = new FileInfo(fileName);
             size += fileInfo.Length;
             dictionary.TryAdd(fileInfo.FullName,
                 new Entry()
                 {
-                    FullPath = fileInfo.FullName, Name = fileInfo.Name, Size = fileInfo.Length, Type = EntryType.File,
+                    FullPath = fileInfo.FullName, 
+                    Name = fileInfo.Name, 
+                    Size = fileInfo.Length, 
+                    Type = EntryType.File,
                     MimeType = MimeTypes.GetMimeType(fileInfo.Name)
                 });
             tree[dirInfo.FullName].Add(fileInfo.FullName);
         }
 
-        string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-        foreach (string subdirectory in subdirectoryEntries)
+        foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
         {
             tree[dirInfo.FullName].Add(subdirectory);
             var subSize = Process(subdirectory, dictionary, tree);
@@ -54,24 +58,28 @@ public static class RecursiveProcessor
         dictionary.TryAdd(dirInfo.FullName,
             new Entry()
             {
-                FullPath = dirInfo.FullName, Name = dirInfo.Name, Size = 0, Type = EntryType.Folder
+                FullPath = dirInfo.FullName, 
+                Name = dirInfo.Name, 
+                Size = 0, 
+                Type = EntryType.Folder
             });
         
-        string[] fileEntries = Directory.GetFiles(targetDirectory);
         long size = 0;
-        foreach (string fileName in fileEntries)
+        foreach (string fileName in Directory.GetFiles(targetDirectory))
         {
             FileInfo fileInfo = new FileInfo(fileName);
             size += fileInfo.Length;
             dictionary.TryAdd(fileInfo.FullName,
                 new Entry()
                 {
-                    FullPath = fileInfo.FullName, Name = fileInfo.Name, Size = fileInfo.Length, Type = EntryType.File
+                    FullPath = fileInfo.FullName, 
+                    Name = fileInfo.Name, 
+                    Size = fileInfo.Length, 
+                    Type = EntryType.File
                 });
         }
 
-        string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-        foreach (string subdirectory in subdirectoryEntries)
+        foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
         {
             var subSize = GetAllEntries(subdirectory, dictionary);
             size += subSize;
@@ -93,15 +101,13 @@ public static class RecursiveProcessor
         DirectoryInfo dirInfo = new DirectoryInfo(targetDirectory);
         tree.TryAdd(dirInfo.FullName, new List<string>());
         
-        string[] fileEntries = Directory.GetFiles(targetDirectory);
-        foreach (string fileName in fileEntries)
+        foreach (string fileName in Directory.GetFiles(targetDirectory))
         {
             FileInfo fileInfo = new FileInfo(fileName);
             tree[dirInfo.FullName].Add(fileInfo.FullName);
         }
 
-        string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-        foreach (string subdirectory in subdirectoryEntries)
+        foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
         {
             tree[dirInfo.FullName].Add(subdirectory);
             GetDirectoriesRelations(subdirectory, tree);
@@ -125,8 +131,7 @@ public static class RecursiveProcessor
     
     private static void GetMimeTypeStatistics(string targetDirectory, Dictionary<string, long[]> dict)
     {
-        string[] fileEntries = Directory.GetFiles(targetDirectory);
-        foreach (string fileName in fileEntries)
+        foreach (string fileName in Directory.GetFiles(targetDirectory))
         {
             FileInfo fileInfo = new FileInfo(fileName);
             if (!dict.TryAdd(MimeTypes.GetMimeType(fileInfo.Name), new long[] {1, fileInfo.Length}))
@@ -136,8 +141,7 @@ public static class RecursiveProcessor
             }
         }
 
-        string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-        foreach (string subdirectory in subdirectoryEntries)
+        foreach (string subdirectory in Directory.GetDirectories(targetDirectory))
         {
             GetMimeTypeStatistics(subdirectory, dict);
         }
