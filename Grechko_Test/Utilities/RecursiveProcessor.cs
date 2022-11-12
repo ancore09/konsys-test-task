@@ -48,7 +48,7 @@ public static class RecursiveProcessor
         return dict;
     }
     
-    public static long GetAllEntries(string targetDirectory, Dictionary<string, Entry> dictionary)
+    private static long GetAllEntries(string targetDirectory, Dictionary<string, Entry> dictionary)
     {
         DirectoryInfo dirInfo = new DirectoryInfo(targetDirectory);
         dictionary.TryAdd(dirInfo.FullName,
@@ -113,6 +113,14 @@ public static class RecursiveProcessor
         var statistics = new Dictionary<string, long[]>();
         GetMimeTypeStatistics(targetDirectory, statistics);
         return statistics;
+    }
+    
+    public static long CalculateTotalSize(Dictionary<string, long[]> statistics) {
+        long totalSize = statistics.Aggregate((pair, valuePair) =>
+        {
+            return new KeyValuePair<string, long[]>("", new[] {pair.Value[0] + valuePair.Value[0]});
+        }).Value[0];
+        return totalSize;
     }
     
     private static void GetMimeTypeStatistics(string targetDirectory, Dictionary<string, long[]> dict)
