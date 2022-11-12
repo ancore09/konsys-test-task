@@ -1,3 +1,5 @@
+using Grechko_Test.Models;
+
 namespace Grechko_Test.Utilities;
 
 public static class RecursiveProcessor

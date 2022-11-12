@@ -1,4 +1,4 @@
-namespace Grechko_Test;
+namespace Grechko_Test.Models;
 
 public class Entry
 {

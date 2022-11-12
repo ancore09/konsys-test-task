@@ -1,6 +1,6 @@
 using Maroontress.Html;
 
-namespace Grechko_Test;
+namespace Grechko_Test.Utilities;
 
 public static class HtmlHelper
 {

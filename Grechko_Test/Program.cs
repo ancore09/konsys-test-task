@@ -1,4 +1,5 @@
 ﻿using System.Text.Encodings.Web;
+using Grechko_Test.Models;
 using Grechko_Test.Utilities;
 using Maroontress.Html;
 
@@ -47,29 +48,33 @@ internal static class Program
             return;
         }
 
+        // content container
         var div = _nodeOf.Div.Add();
 
         var statistics = RecursiveProcessor.GetMimeTypeStatistics(directoryInfo.FullName);
-        long total = statistics.Aggregate((pair, valuePair) =>
+        long totalSize = statistics.Aggregate((pair, valuePair) =>
         {
             return new KeyValuePair<string, long[]>("", new[] {pair.Value[0] + valuePair.Value[0]});
         }).Value[0];
         
+        // list for displaying MimeType statistics
         var mimeUl = HtmlHelper.CreateUnorderedList();
         foreach (var (key, value) in statistics)
         {
-            mimeUl = mimeUl.Add(HtmlHelper.GetStatisticsListElement(key, value[0], total, value[1]));
+            mimeUl = mimeUl.Add(HtmlHelper.GetStatisticsListElement(key, value[0], totalSize, value[1]));
         }
-        div = div.Add(HtmlHelper.CreateH3("Mime Statistics"), mimeUl)
-            .AddClass("p-4");
         
-        
+        div = div.Add(HtmlHelper.CreateH3("Mime Statistics"), mimeUl).AddClass("p-4");
+
+        // get all filesystem entries and their relations
         Dictionary<string, Entry> entries = new Dictionary<string, Entry>();
         Dictionary<string, List<string>> adjList = new Dictionary<string, List<string>>();
         RecursiveProcessor.Process(directoryInfo.FullName, entries, adjList);
 
+        // list for displaying folder structure
         var treeUl = HtmlHelper.CreateUnorderedList();
 
+        // recursively add file entry elements to treeUl
         Dfs(entries[directoryInfo.FullName], ref treeUl);
 
         void Dfs(Entry entry, ref Tag list)
@@ -92,9 +97,11 @@ internal static class Program
             list = list.Add(subUl);
         }
 
+        // append treeUl to the container and to the html document
         div = div.Add(HtmlHelper.CreateH3("Folder Structure"), treeUl);
         _document = _document.Add(_nodeOf.Body.Add(div));
 
+        // write html file
         using var sw = new StreamWriter(GetOutputPath().FullName);
         sw.Write(_document.ToString());
     }
