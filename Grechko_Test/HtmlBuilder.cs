@@ -5,13 +5,6 @@ using Maroontress.Html;
 
 namespace Grechko_Test;
 
-interface IHtmlBuilder
-{
-    public void AddMimeStatistics(DirectoryInfo directoryInfo);
-    public void AddFolderStructure(DirectoryInfo directoryInfo);
-    public void Write(FileInfo fileInfo);
-}
-
 public class HtmlBuilder: IHtmlBuilder
 {
     private NodeFactory _nodeOf;
